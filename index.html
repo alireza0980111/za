@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>عدد اول | Black & White</title>
+
+  <style>
+    *{
+      box-sizing:border-box;
+      font-family:Tahoma, sans-serif;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      /* background:linear-gradient(135deg, #0f2027, #203a43, #2c5364); */
+      color:#f5f5f5;
+    }
+
+    .box{
+      width:100%;
+      max-width:420px;
+      padding:24px;
+      background:#000;
+      border:2px solid #fff;
+      border-radius:18px;
+      color:#fff;
+      transition:all 0.4s ease;
+    }
+
+    .box:hover{
+      background:#fff;
+      color:#000;
+      transform:translateY(-4px);
+    }
+
+    h2{
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    input{
+      width:100%;
+      padding:12px;
+      margin-bottom:16px;
+      background:#000;
+      border:2px solid #fff;
+      border-radius:10px;
+      color:#fff;
+      font-size:16px;
+      transition:0.3s;
+    }
+
+    .box:hover input{
+      background:#fff;
+      color:#000;
+      border-color:#000;
+    }
+
+    button{
+      width:100%;
+      padding:12px;
+      border:2px solid #fff;
+      border-radius:12px;
+      font-size:16px;
+      cursor:pointer;
+      background:#000;
+      color:#fff;
+      transition:0.3s;
+    }
+
+    .box:hover button{
+      background:#000;
+      color:#fff;
+      border-color:#000;
+    }
+
+    .result{
+      margin-top:20px;
+      line-height:1.8;
+      font-size:14px;
+    }
+
+    @media(max-width:480px){
+      .box{
+        margin:16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h2>برسی عدد</h2>
+    <input type="number" id="num" placeholder="عدد را وارد کن">
+    <button onclick="checkPrime()">بررسی</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function checkPrime(){
+      const n = parseInt(document.getElementById('num').value);
+      const res = document.getElementById('result');
+
+      if(isNaN(n) || n < 1){
+        res.innerHTML = '❌ لطفاً یک عدد صحیح بزرگ‌تر از صفر وارد کن';
+        return;
+      }
+
+      let html = '';
+
+      // زوج یا فرد
+      html += `🔢 <b>${n}</b> یک عدد <b>${n % 2 === 0 ? 'زوج' : 'فرد'}</b> است.<br><br>`;
+
+      // مربع کامل
+      const sqrt = Math.sqrt(n);
+      if(Number.isInteger(sqrt)){
+        html += `◼️ این عدد مربع کامل است چون ${sqrt} × ${sqrt} = ${n}<br><br>`;
+      } else {
+        html += `◻️ این عدد مربع کامل نیست چون ریشه دوم آن عدد صحیح نیست (${sqrt.toFixed(2)})<br><br>`;
+      }
+
+      if(n === 1){
+        html += '❌ عدد ۱ نه اول است و نه مرکب چون فقط یک مقسوم‌علیه دارد.';
+        res.innerHTML = html;
+        return;
+      }
+
+      let divisors = [];
+      let steps = '';
+
+      for(let i = 2; i <= Math.sqrt(n); i++){
+        steps += `بررسی: ${n} ÷ ${i} = ${(n / i).toFixed(2)}<br>`;
+        if(n % i === 0){
+          divisors.push(i);
+          if(i !== n / i) divisors.push(n / i);
+        }
+      }
+
+      if(divisors.length === 0){
+        html += `✅ این عدد <b>اول</b> است چون هیچ مقسوم‌علیه‌ای به جز ۱ و خودش ندارد.<br><br>`;
+      } else {
+        html += `❌ این عدد <b>مرکب</b> است چون بر اعداد زیر بخش‌پذیر است:<br>`;
+        html += divisors.sort((a,b)=>a-b).join(' , ');
+        html += '<br><br>';
+      }
+
+      html += `<details style="margin-top:10px"><summary>📋 نمایش مراحل تشخیص</summary><br>${steps}</details>`;
+
+      res.innerHTML = html;
+    }
+  </script>
+
+</body>
+</html>
